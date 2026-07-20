@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Vue App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-black min-h-screen flex items-center justify-center p-4 antialiased">
+    <div id="app" class="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
+      
+      <!-- Top Header Profile Section -->
+      <div class="p-6 pb-5 border-b border-slate-100 bg-gradient-to-b from-slate-50/50 to-white">
+        <div class="flex items-center gap-4">
+          <!-- Avatar Placeholder -->
+          <div class="w-16 h-16 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xl shadow-md shadow-blue-100 tracking-wider">
+            {{ firstName[0] }}{{ lastName[0] }}
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-slate-800 tracking-tight">
+              {{ firstName }} {{ lastName }}
+            </h1>
+            <p class="text-sm text-slate-500 flex items-center gap-1.5 mt-0.5">
+              <span>📍 {{ city }}</span>
+              <span class="text-slate-300">•</span>
+              <span>{{ age }} years old</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Details -->
+      <div class="p-6 space-y-5">
+        
+        <!-- Bio Segment -->
+        <div>
+          <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+            About Me
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed italic">
+            "{{ bio }}"
+          </p>
+        </div>
+
+        <!-- Contact Detail -->
+        <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100/80 transition-all duration-200 hover:border-slate-200">
+          <span class="text-xs font-medium text-slate-500">Email Contact</span>
+          <a :href="'mailto:' + email" class="text-sm font-semibold text-blue-600 hover:underline transition-colors">{{ email }}</a>
+        </div>
+
+        <!-- Mode Status -->
+        <div class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-300"
+          :class="isProfessional ? 'bg-emerald-50/60 border-emerald-100 text-emerald-800' : 'bg-amber-50/60 border-amber-100 text-amber-800'">
+          <div class="flex flex-col gap-0.5">
+            <span class="text-[10px] font-medium opacity-60 uppercase tracking-wider">Work Status</span>
+            <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+              <span class="w-2 h-2 rounded-full animate-pulse" :class="isProfessional ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+              {{ isProfessional ? "Professional" : "Casual" }}
+            </span>
+          </div>
+
+          <button @click="changeMode" class="bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 shadow-sm transition-all duration-200 active:scale-95 cursor-pointer">
+            Toggle Mode
+          </button>
+        </div>
+
+        <!-- Hobbies Section (Clean Row) -->
+        <div>
+          <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">
+            Interests & Hobbies
+          </h2>
+          <ul class="flex flex-wrap gap-2">
+            <li class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200/40 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 cursor-default"
+              v-for="hobby in hobbies" :key="hobby">
+              {{ hobby }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Random Facts Block -->
+        <div class="pt-5 border-t border-slate-100 flex flex-col gap-3">
+          <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Fun Fact
+          </h2>
+          
+          <div class="bg-indigo-50/50 border border-indigo-100/60 rounded-xl p-4 text-sm text-indigo-950 font-medium flex flex-col gap-3">
+            <div class="flex items-start gap-2 min-h-[40px]">
+              <span class="text-base select-none">💡</span>
+              <p class="leading-relaxed text-indigo-900">{{ facts[currentFactIndex] }}</p>
+            </div>
+            
+            <button @click="randomizeFact" class="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-md shadow-indigo-100/50 transition-all duration-200 active:scale-[0.98] cursor-pointer">
+              Next Random Fact
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+      const app = createApp({
+        data() {
+          return {
+            firstName: "DAM",
+            lastName: "Lyhong",
+            age: 19,
+            email: "damlyhong@gmail.com",
+            city: "Phnom Penh",
+            hobbies: ["Coding", "Reading", "Gaming"],
+            bio: "Brief description about yourself",
+            isProfessional: true,
+            facts: ["Fact 1", "Fact 2", "Fact 3"],
+            currentFactIndex: 0,
+          };
+        },
+        methods: {
+          randomizeFact() {
+            this.currentFactIndex = Math.floor(
+              Math.random() * this.facts.length
+            );
+          },
+          changeMode() {
+            this.isProfessional = !this.isProfessional;
+          }
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
