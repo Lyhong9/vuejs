@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Vue App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div id="app" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <button
+        @click="loginStatus = !loginStatus"
+        class="mt-4 mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        Toggle Login Status
+      </button>
+      <template v-if="loginStatus">
+        <p class="text-green-700">You are logged in!</p>
+        <a v-bind:href="googleUrl" target="_blank" :class="className"
+          >Visit Google</a
+        ><br />
+        <a v-bind:href="youtubeUrl" target="_blank" :class="className"
+          >Visit YouTube</a
+        >
+      </template>
+      <br />
+      <h1 v-if="loginStatus == true">{{ message }}</h1>
+      <h1 v-else>Login to see the message</h1>
+
+      <p :class="activeClass">This text can be changed color</p>
+      <button
+        @click="toggleClass"
+        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        Toggle Text Color
+      </button>
+
+      <button
+        @click="toggleBold"
+        class="mt-4 mx-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+      >
+        Toggle Bold
+      </button>
+
+      <div :class="{ 'text-green-700': isActive, 'font-bold': isBold}">
+        Dynamic classes
+      </div>
+      <h1>Count: {{ count }}</h1>
+      <button
+        @click="count++"
+        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        Increment Count
+      </button>
+      <button
+        @click="count+=10"
+        class="mx-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        Increment Count 10
+      </button>
+      <div>
+        <p v-if="score >= 90">Grade: A (Excellent!)</p>
+        <p v-else-if="score >= 80">Grade: B (Good)</p>
+        <p v-else-if="score >= 70">Grade: C (Fair)</p>
+        <p v-else-if="score >= 60">Grade: D (Pass)</p>
+        <p v-else>Grade: F (Fail)</p>
+        <!-- <input type="number" title="Score" v-model.number="score" class="mt-2 p-1 border rounded"> -->
+        <input
+          type="number"
+          title="Score"
+          v-model="score"
+          class="mt-2 p-1 border rounded"
+        />
+      </div>
+      <p v-show="isVisible">This text can be toggled</p>
+      <h1>List of Items:</h1>
+
+      <ul>
+        <li v-for="(item, index) in items" :key="index">
+          {{index+1}} : {{ item }}
+        </li>
+      </ul>
+
+      <ul>
+        <li v-for="(product, index) in products" :key="product.id">
+          {{ product.name }}: ${{ product.price }}
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            message: "Hello Vue!",
+            googleUrl: "https://google.com",
+            youtubeUrl: "https://youtube.com",
+            className: "text-blue-500 hover:text-green-700",
+            activeClass: "text-red-700",
+            isActive: true,
+            isBold: true,
+            count: 0,
+            loginStatus: false,
+            score: 0,
+            isVisible: true,
+            items: ["Item 1", "Item 2", "Item 3"],
+            products: [
+              { id: 1, name: "Laptop", price: 999 },
+              { id: 2, name: "Phone", price: 599 },
+              { id: 3, name: "Tablet", price: 399 },
+            ],
+          };
+        },
+        methods: {
+          toggleClass() {
+            this.activeClass =
+              this.activeClass === "text-red-700"
+                ? "text-green-700"
+                : "text-red-700";
+          },
+          toggleBold() {
+            this.isBold = !this.isBold;
+            this.isActive = !this.isActive;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
