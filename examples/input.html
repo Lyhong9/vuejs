@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-model Demo</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
+  <div id="app" class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Live Preview</h1>
+    
+    <label class="block mb-2 text-gray-700 font-medium">Type your name:</label>
+    <input v-model="name" 
+           placeholder="Enter your name"
+           class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 mb-4">
+    
+    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+      <p class="text-lg text-gray-800">Hello, <strong>{{ name || 'stranger' }}</strong>!</p>
+      <p class="text-sm text-gray-600 mt-2">Character count: {{ name.length }}</p>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          name: ''
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
