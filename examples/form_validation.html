@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Vue App</title>
+    <!-- Vue 3 Core CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Official Tailwind v4 Browser CDN -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div id="app" class="max-w-md mx-auto p-6">
+      <form @submit.prevent="submitForm" class="space-y-4">
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">Email:</label>
+          <input
+            v-model="email"
+            type="email"
+            @blur="validateEmail"
+            class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+          />
+          <span v-if="emailError" class="text-red-500 text-sm mt-1 block"
+            >{{ emailError }}</span
+          >
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2"
+            >Password:</label
+          >
+          <input
+            v-model="password"
+            type="password"
+            @blur="validatePassword"
+            class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+          />
+          <span v-if="passwordError" class="text-red-500 text-sm mt-1 block"
+            >{{ passwordError }}</span
+          >
+        </div>
+
+        <button
+          type="submit"
+          :disabled="!isFormValid"
+          class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+    <script>
+      createApp({
+        data() {
+          return {
+            email: "",
+            password: "",
+            emailError: "",
+            passwordError: "",
+          };
+        },
+        computed: {
+          isFormValid() {
+            return (
+              this.email &&
+              this.password &&
+              !this.emailError &&
+              !this.passwordError
+            );
+          },
+        },
+        methods: {
+          validateEmail() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!this.email) {
+              this.emailError = "Email is required";
+            } else if (!emailRegex.test(this.email)) {
+              this.emailError = "Invalid email format";
+            } else {
+              this.emailError = "";
+            }
+          },
+          validatePassword() {
+            if (!this.password) {
+              this.passwordError = "Password is required";
+            } else if (this.password.length < 6) {
+              this.passwordError = "Password must be at least 6 characters";
+            } else {
+              this.passwordError = "";
+            }
+          },
+          submitForm() {
+            this.validateEmail();
+            this.validatePassword();
+
+            if (this.isFormValid) {
+              console.log("Form submitted:", {
+                email: this.email,
+                password: this.password,
+              });
+              alert("Form submitted successfully!");
+            }
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

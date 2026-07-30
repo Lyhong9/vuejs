@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Vue App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div id="app" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <!-- One-way data binding example -->
+      <input
+        placeholder="Enter a message..."
+        type="text"
+        :value="message"
+        class="my-4 p-2 border rounded w-full"
+      />
+
+      <!-- Two-way data binding example -->
+      <h1 class="text-2xl font-bold">{{ message }}</h1>
+
+      <div class="mt-4 p-2 border rounded w-full">
+        <!-- Updates on every keystroke -->
+        <input
+          class="my-4 p-2 border rounded w-full"
+          placeholder="Normal"
+          v-model="message"
+        />
+        <!-- Updates when input loses focus -->
+        <p>Use Model Lazy</p>
+        <input
+          class="p-2 border rounded w-full"
+          placeholder="Model Lazy"
+          v-model.lazy="message"
+        />
+      </div>
+
+      <input
+        class="mt-4 p-2 border rounded w-full"
+        placeholder="V MOdel number"
+        v-model.number="age"
+        type="number"
+      />
+      <p>Age: {{ age }} (Type: {{ typeof age }})</p>
+
+      <input
+        class="mt-4 p-2 border rounded w-full"
+        placeholder="Use trim"
+        v-model.trim="username"
+      />
+      <p>Username: "{{ username }}"</p>
+
+      <input
+        class="mt-4 p-2 border rounded w-full"
+        placeholder="Combining Modifiers"
+        v-model.lazy.trim="email"
+      />
+      <p>{{ email }}</p>
+      <input
+        class="mt-4 p-2 border rounded w-full"
+        placeholder="Combining Modifiers"
+        v-model.number.lazy="age"
+        type="number"
+      />
+      <h1>{{ age}}</h1>
+
+      <input
+        placeholder="Enter a message..."
+        type="text"
+        v-model="message"
+        class="mt-4 p-2 border rounded w-full"
+      />
+
+      <textarea
+        placeholder="Enter a message..."
+        v-model="message"
+        class="mt-4 p-2 border rounded w-full"
+        rows="5"
+      ></textarea>
+
+      <div>
+        <input type="checkbox" id="agree" v-model="agreed" />
+        <label for="agree">I agree to terms</label>
+        <p>Agreed: {{ agreed }}</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+        <input type="checkbox" id="html" value="HTML" v-model="skills" />
+        <label for="html" class="mr-2">HTML</label>
+        <input type="checkbox" id="css" value="CSS" v-model="skills" />
+        <label for="css" class="mr-2">CSS</label>
+        <input type="checkbox" id="js" value="JavaScript" v-model="skills" />
+        <label for="js" class="mr-2">JavaScript</label>
+        <p>Selected skills: {{ skills }}</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+        <input type="radio" id="male" value="male" v-model="gender" />
+        <label for="male">Male</label>
+
+        <input type="radio" id="female" value="female" v-model="gender" />
+        <label for="female">Female</label>
+
+        <p>Selected: {{ gender }}</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+        <select v-model="selected" class="p-2 border rounded w-full">
+          <option disabled value="">Please select</option>
+          <option value="A">Option A</option>
+          <option value="B">Option B</option>
+          <option value="C">Option C</option>
+        </select>
+        <p>Selected: {{ selected }}</p>
+      </div>
+
+      <div class="border border-blue-700">
+        <select v-model="selectedCities" multiple>
+          <option value="PP">Phnom Penh</option>
+          <option value="SR">Siem Reap</option>
+          <option value="BB">Battambang</option>
+          <option value="SHV">Sihanoukville</option>
+        </select>
+        <p>Selected cities: {{ selectedCities }}</p>
+      </div>
+
+      <div class="border border-black mt-4">
+        <select v-model="selectedCountry">
+          <option
+            v-for="(city,index) in countries"
+            :key="index"
+            value="city.code"
+          >
+            {{ city.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            message: "Hello Vue!",
+            username: "",
+            agreed: true,
+            skills: [],
+            gender: "",
+            selected: "",
+            selectedCities: [],
+            selectedCountry: "",
+            countries: [
+              { code: "KH", name: "Cambodia" },
+              { code: "TH", name: "Thailand" },
+              { code: "VN", name: "Vietnam" },
+            ],
+            age: 0, // Will be a number, not a string
+            email: ""
+          };
+        },
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>
