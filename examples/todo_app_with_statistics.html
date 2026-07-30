@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App with Computed</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+  <div id="app" class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">📝 Advanced Todo App</h1>
+    
+    <!-- Statistics -->
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <div class="bg-gray-50 p-4 rounded-lg text-center">
+        <div class="text-3xl font-bold text-green-600">{{ totalTodos }}</div>
+        <div class="text-sm text-gray-600">Total</div>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg text-center">
+        <div class="text-3xl font-bold text-green-600">{{ completedCount }}</div>
+        <div class="text-sm text-gray-600">Completed</div>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg text-center">
+        <div class="text-3xl font-bold text-green-600">{{ pendingCount }}</div>
+        <div class="text-sm text-gray-600">Pending</div>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg text-center">
+        <div class="text-3xl font-bold text-green-600">{{ completionRate }}%</div>
+        <div class="text-sm text-gray-600">Progress</div>
+      </div>
+    </div>
+    
+    <!-- Input -->
+    <div class="flex gap-2 mb-4">
+      <input 
+        v-model="newTodo" 
+        @keyup.enter="addTodo"
+        placeholder="Add a new todo..."
+        class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500">
+      <select v-model="newPriority" class="px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button @click="addTodo" class="px-6 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition">
+        Add
+      </button>
+    </div>
+    
+    <!-- Filters -->
+    <div class="flex gap-2 mb-4">
+      <button 
+        @click="filter = 'all'"
+        :class="filter === 'all' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'"
+        class="flex-1 px-4 py-2 rounded-lg font-semibold transition hover:opacity-90">
+        All ({{ totalTodos }})
+      </button>
+      <button 
+        @click="filter = 'pending'"
+        :class="filter === 'pending' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'"
+        class="flex-1 px-4 py-2 rounded-lg font-semibold transition hover:opacity-90">
+        Pending ({{ pendingCount }})
+      </button>
+      <button 
+        @click="filter = 'completed'"
+        :class="filter === 'completed' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'"
+        class="flex-1 px-4 py-2 rounded-lg font-semibold transition hover:opacity-90">
+        Completed ({{ completedCount }})
+      </button>
+    </div>
+    
+    <!-- Todo List -->
+    <div v-for="todo in filteredTodos" 
+         :key="todo.id"
+         :class="[
+           'bg-gray-50 p-4 mb-2 rounded-lg flex justify-between items-center',
+           todo.completed ? 'opacity-60 line-through' : '',
+           todo.priority === 'high' ? 'border-l-4 border-red-500' : '',
+           todo.priority === 'medium' ? 'border-l-4 border-yellow-500' : '',
+           todo.priority === 'low' ? 'border-l-4 border-green-500' : ''
+         ]">
+      <span>{{ todo.text }}</span>
+      <div class="flex gap-2">
+        <button @click="toggleTodo(todo.id)" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+          {{ todo.completed ? '↩️' : '✓' }}
+        </button>
+        <button @click="deleteTodo(todo.id)" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
+          🗑️
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          newTodo: '',
+          newPriority: 'medium',
+          filter: 'all',
+          todos: [
+            { id: 1, text: 'Learn Vue.js', completed: true, priority: 'high' },
+            { id: 2, text: 'Build a project', completed: false, priority: 'medium' },
+            { id: 3, text: 'Deploy to production', completed: false, priority: 'low' }
+          ],
+          nextId: 4
+        }
+      },
+      computed: {
+        filteredTodos() {
+          if (this.filter === 'completed') {
+            return this.todos.filter(t => t.completed);
+          } else if (this.filter === 'pending') {
+            return this.todos.filter(t => !t.completed);
+          }
+          return this.todos;
+        },
+        totalTodos() {
+          return this.todos.length;
+        },
+        completedCount() {
+          return this.todos.filter(t => t.completed).length;
+        },
+        pendingCount() {
+          return this.todos.filter(t => !t.completed).length;
+        },
+        completionRate() {
+          if (this.totalTodos === 0) return 0;
+          return Math.round((this.completedCount / this.totalTodos) * 100);
+        }
+      },
+      watch: {
+        todos: {
+          handler(newTodos) {
+            localStorage.setItem('todos', JSON.stringify(newTodos));
+            console.log('Todos saved to localStorage');
+          },
+          deep: true
+        }
+      },
+      methods: {
+        addTodo() {
+          if (this.newTodo.trim()) {
+            this.todos.push({
+              id: this.nextId++,
+              text: this.newTodo,
+              completed: false,
+              priority: this.newPriority
+            });
+            this.newTodo = '';
+          }
+        },
+        toggleTodo(id) {
+          const todo = this.todos.find(t => t.id === id);
+          if (todo) {
+            todo.completed = !todo.completed;
+          }
+        },
+        deleteTodo(id) {
+          this.todos = this.todos.filter(t => t.id !== id);
+        }
+      },
+      mounted() {
+        const saved = localStorage.getItem('todos');
+        if (saved) {
+          this.todos = JSON.parse(saved);
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
