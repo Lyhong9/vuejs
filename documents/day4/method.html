@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Vue App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div id="app" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <!-- How to use Method -->
+      <template class="flex flex-col gap-4">
+        <div class="flex flex-row gap-4">
+          <h1 class="text-xl font-bold">{{message}}</h1>
+          <h1 class="text-xl font-bold">{{getMessage()}}</h1>
+        </div>
+        <div class="flex flex-row gap-4">
+          <button
+            class="px-4 py-2 bg-blue-500 text-white rounded w-[150px]"
+            @click="increment"
+          >
+            Increment
+          </button>
+          <button
+            class="px-4 py-2 bg-blue-500 text-white rounded w-[150px]"
+            @click="addValue(5)"
+          >
+            Add 5
+          </button>
+        </div>
+      </template>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            message: "Hello Lyhong",
+            count: 0,
+          };
+        },
+        methods: {
+          increment() {
+            this.count++;
+          },
+          addValue(value) {
+            this.count += value;
+          },
+          getMessage() {
+            return `Count is: ${this.count}`;
+          },
+        },
+        
+      }).mount("#app");
+    </script>
+  </body>
+</html>

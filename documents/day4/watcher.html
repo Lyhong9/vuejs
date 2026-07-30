@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Vue App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div id="app" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <p>Ask a question:</p>
+      <input
+        class="border border-gray-300 rounded p-2 w-[150px]"
+        v-model.lazy="question"
+        placeholder="Type a question..."
+      />
+      <p>{{ answer }}</p>
+
+      <input v-model.lazy="user.name" class="border mt-2 p-2 rounded" />
+      <input
+        v-model.lazy.number="user.profile.age"
+        type="number"
+        class="border mt-2 p-2 rounded"
+      />
+
+      <p>
+        {{ "Name: " +user.name +" Age: "+ user.profile.age +" City: "+
+        user.profile.city}}
+      </p>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            question: "",
+            answer: "Ask a question!",
+            user: {
+              name: "John",
+              profile: {
+                age: 30,
+                city: "Phnom Penh",
+              },
+            },
+          };
+        },
+        methods: {
+          fetchAnswer() {
+            // Simulate API call
+            setTimeout(() => {
+              this.answer = "The answer is 42!";
+            }, 1000);
+          },
+        },
+        watch: {
+          user: {
+            handler(newValue) {
+              console.log("User changed:", newValue);
+            },
+            deep: true, // Watch nested properties
+          },
+          // Watch 'question' property
+          question(newValue, oldValue) {
+            console.log(`Question changed from "${oldValue}" to "${newValue}"`);
+            this.answer = "Thinking...";
+            this.fetchAnswer();
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
